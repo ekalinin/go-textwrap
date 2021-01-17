@@ -66,3 +66,39 @@ func TestDedentEven(t *testing.T) {
 		}
 	}
 }
+
+func TestDedentUneven(t *testing.T) {
+	tests := []struct {
+		input    string
+		expexted string
+	}{
+		// Lines indented unevenly.
+		{
+			`
+        def foo():
+            while 1:
+                return foo`,
+			`
+def foo():
+    while 1:
+        return foo`,
+		},
+		// Uneven indentation with a blank line.
+		{
+			"  Foo\n    Bar\n\n   Baz\n",
+			"Foo\n  Bar\n\n Baz\n",
+		},
+		// Uneven indentation with a whitespace-only line.
+		{
+			"  Foo\n    Bar\n \n   Baz\n",
+			"Foo\n  Bar\n\n Baz\n",
+		},
+	}
+
+	for idx, test := range tests {
+		got := Dedent(test.input)
+		if test.expexted != got {
+			t.Errorf("[%d]\n want: %q\n  got: %q", idx, test.expexted, got)
+		}
+	}
+}

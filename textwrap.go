@@ -2,6 +2,7 @@ package textwrap
 
 import (
 	"bufio"
+	"log"
 	"regexp"
 	"strings"
 )
@@ -35,6 +36,11 @@ func zip(s1, s2 string) []zipped {
 	return res
 }
 
+var (
+	leadSpaceRe = regexp.MustCompile(`(^[ \t]*)([^ \t\n])`)
+	blankRowsRe = regexp.MustCompile(`(?m)^[ \t]*$`)
+)
+
 // Dedent removes any common leading whitespace from every line in `text`.
 //
 // This can be used to make multiline strings line up with the left
@@ -46,14 +52,22 @@ func zip(s1, s2 string) []zipped {
 // considered to have no common leading whitespace.
 //
 // Entirely blank lines are normalized to a newline character.
+//
+// Sources:
+// 	- https://docs.python.org/3/library/textwrap.html#textwrap.dedent
+//  - https://github.com/python/cpython/blob/3.9/Lib/textwrap.py#L414
+// 	- https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L694
 func Dedent(text string) string {
 	// Look for the longest leading string of spaces and tabs common to all lines
 	margin := ""
-	leadSpaceRe := regexp.MustCompile(`(^[ \t]*)([^ \t\n])`)
+	debug := false
 
-	for _, row := range strings.Split(text, "\n") {
+	for idx, row := range strings.Split(text, "\n") {
 		leadSpaces := leadSpaceRe.FindAllString(row, 1)
 		if len(leadSpaces) == 0 {
+			if debug {
+				log.Printf("skip row[%d]: %q (only lead spaces)", idx, row)
+			}
 			continue
 		}
 
@@ -62,11 +76,14 @@ func Dedent(text string) string {
 		} else if strings.HasPrefix(row, margin) {
 			// Current line more deeply indented than previous winner:
 			// no change (previous winner is still on top).
+			if debug {
+				log.Printf("skip row[%d]: %q (marging=%q)", idx, row, margin)
+			}
 			continue
 		} else if strings.HasPrefix(margin, row) {
 			// Current line consistent with and no deeper than previous winner:
 			// it's the new winner.
-			margin = row[:len(row)-1]
+			margin = row
 		} else {
 			// Find the largest common whitespace between current line and previous
 			// winner.
@@ -79,9 +96,20 @@ func Dedent(text string) string {
 		}
 	}
 
+	// sanity check (testing/debugging only)
+	if debug && margin != "" {
+		for idx, row := range strings.Split(text, "\n") {
+			if row == "" || strings.HasPrefix(row, margin) {
+				log.Printf("%d: line = %q, margin = %q", idx, row, margin)
+			}
+		}
+	}
+
 	if margin != "" {
-		deleteLeadRe := regexp.MustCompile("(?m)" + margin)
-		return deleteLeadRe.ReplaceAllString(text, "")
+		deleteLeadRe := regexp.MustCompile("(?m)^" + margin)
+		return deleteLeadRe.ReplaceAllLiteralString(
+			blankRowsRe.ReplaceAllLiteralString(text, ""),
+			"")
 	}
 	return text
 }
