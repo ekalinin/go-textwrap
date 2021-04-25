@@ -20,7 +20,7 @@ func TestDedentUnchanged(t *testing.T) {
 	for idx, test := range tests {
 		got := Dedent(test)
 		if test != got {
-			t.Errorf("[%d] want: %q, got: %q", idx, test, got)
+			t.Errorf("test #%d:\n want: %q\n  got: %q", idx, test, got)
 		}
 	}
 }
@@ -92,6 +92,36 @@ def foo():
 		{
 			"  Foo\n    Bar\n \n   Baz\n",
 			"Foo\n  Bar\n\n Baz\n",
+		},
+	}
+
+	for idx, test := range tests {
+		got := Dedent(test.input)
+		if test.expexted != got {
+			t.Errorf("[%d]\n want: %q\n  got: %q", idx, test.expexted, got)
+		}
+	}
+}
+
+func TestDedentDeclining(t *testing.T) {
+	tests := []struct {
+		input    string
+		expexted string
+	}{
+		// Uneven indentation with declining indent level.
+		{
+			"     Foo\n    Bar\n", // 5 spaces, then 4
+			" Foo\nBar\n",
+		},
+		// Declining indent level with blank line.
+		{
+			"     Foo\n\n    Bar\n", // 5 spaces, blank, then 4
+			" Foo\n\nBar\n",
+		},
+		// Declining indent level with whitespace only line.
+		{
+			"     Foo\n    \n    Bar\n", //5 spaces, then 4, then 4
+			" Foo\n\nBar\n",
 		},
 	}
 
