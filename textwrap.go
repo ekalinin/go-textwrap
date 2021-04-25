@@ -37,8 +37,9 @@ func zip(s1, s2 string) []zipped {
 }
 
 var (
-	leadSpaceRe = regexp.MustCompile(`(^[ \t]*)([^ \t\n])`)
+	leadSpaceRe = regexp.MustCompile(`(^[ \t]*)`)
 	blankRowsRe = regexp.MustCompile(`(?m)^[ \t]*$`)
+	emptyMargin = "empty_margin"
 )
 
 // Dedent removes any common leading whitespace from every line in `text`.
@@ -59,31 +60,53 @@ var (
 // 	- https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L694
 func Dedent(text string) string {
 	// Look for the longest leading string of spaces and tabs common to all lines
-	margin := ""
-	debug := false
+	margin := emptyMargin
+	debug := true
+	if debug {
+		log.Printf("Dedent row: %q", text)
+	}
 
 	for idx, row := range strings.Split(text, "\n") {
-		leadSpaces := leadSpaceRe.FindAllString(row, 1)
-		if len(leadSpaces) == 0 {
+		if row == "" {
 			if debug {
-				log.Printf("skip row[%d]: %q (only lead spaces)", idx, row)
+				log.Printf("%d: skip empty row %q", idx, row)
 			}
 			continue
 		}
 
-		if margin == "" {
+		leadSpaces := leadSpaceRe.FindAllString(row, 1)
+		if len(leadSpaces) == 0 {
+			if debug {
+				log.Printf("%d: skip row %q (only lead spaces, %s)", idx, row, leadSpaces)
+			}
+			continue
+		}
+
+		if len(leadSpaces) == len(row) {
+			if debug {
+				log.Printf("%d: skip row %q (full of spaces, %q)", idx, row, leadSpaces)
+			}
+			continue
+		}
+
+		if margin == emptyMargin {
 			margin = leadSpaces[0]
+			if debug {
+				log.Printf("%d: empty margin, take first one=%q", idx, margin)
+			}
 		} else if strings.HasPrefix(row, margin) {
 			// Current line more deeply indented than previous winner:
 			// no change (previous winner is still on top).
 			if debug {
-				log.Printf("skip row[%d]: %q (marging=%q)", idx, row, margin)
+				log.Printf("%d: skip row %q (same marging=%q)", idx, row, margin)
 			}
-			continue
 		} else if strings.HasPrefix(margin, row) {
 			// Current line consistent with and no deeper than previous winner:
 			// it's the new winner.
 			margin = row
+			if debug {
+				log.Printf("%d: row %q (just take margin=%q)", idx, row, margin)
+			}
 		} else {
 			// Find the largest common whitespace between current line and previous
 			// winner.
@@ -92,6 +115,9 @@ func Dedent(text string) string {
 					margin = margin[:i]
 					break
 				}
+			}
+			if debug {
+				log.Printf("%d: row %q (tried to find new margin=%q)", idx, row, margin)
 			}
 		}
 	}

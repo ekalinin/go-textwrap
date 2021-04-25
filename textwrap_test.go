@@ -132,3 +132,23 @@ func TestDedentDeclining(t *testing.T) {
 		}
 	}
 }
+
+func TestDedentPreserveIntTabs(t *testing.T) {
+	tests := []struct {
+		input    string
+		expexted string
+	}{
+		// should not mangle internal tabs
+		{
+			"  hello\tthere\n  how are\tyou?",
+			"hello\tthere\nhow are\tyou?",
+		},
+	}
+
+	for idx, test := range tests {
+		got := Dedent(test.input)
+		if test.expexted != got {
+			t.Errorf("[%d]\n want: %q\n  got: %q", idx, test.expexted, got)
+		}
+	}
+}
