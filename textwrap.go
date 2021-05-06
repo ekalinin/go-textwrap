@@ -7,10 +7,6 @@ import (
 	"strings"
 )
 
-func isSpace(r rune) bool {
-	return r == '\t' || r == ' '
-}
-
 type zipped struct {
 	s1 rune
 	s2 rune
