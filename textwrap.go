@@ -7,6 +7,12 @@ import (
 	"strings"
 )
 
+var debug bool
+
+func SetDebug(d bool) {
+	debug = d
+}
+
 type zipped struct {
 	s1 rune
 	s2 rune
@@ -57,7 +63,6 @@ var (
 func Dedent(text string) string {
 	// Look for the longest leading string of spaces and tabs common to all lines
 	margin := emptyMargin
-	debug := false
 
 	if debug {
 		log.Printf("Dedent row: %q", text)
