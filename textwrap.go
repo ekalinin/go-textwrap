@@ -61,7 +61,8 @@ var (
 func Dedent(text string) string {
 	// Look for the longest leading string of spaces and tabs common to all lines
 	margin := emptyMargin
-	debug := true
+	debug := false
+
 	if debug {
 		log.Printf("Dedent row: %q", text)
 	}

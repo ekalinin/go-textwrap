@@ -133,6 +133,7 @@ func TestDedentDeclining(t *testing.T) {
 	}
 }
 
+// TestDedentPreserveIntTabs checks that dedent() should not mangle internal tabs
 func TestDedentPreserveIntTabs(t *testing.T) {
 	tests := []struct {
 		input    string
@@ -142,6 +143,56 @@ func TestDedentPreserveIntTabs(t *testing.T) {
 		{
 			"  hello\tthere\n  how are\tyou?",
 			"hello\tthere\nhow are\tyou?",
+		},
+	}
+
+	for idx, test := range tests {
+		got := Dedent(test.input)
+		if test.expexted != got {
+			t.Errorf("[%d]\n want: %q\n  got: %q", idx, test.expexted, got)
+		}
+	}
+}
+
+// TestDedentPreserveMarginTabs checks that dedent() should not mangle tabs in
+// the margin (i.e. tabs and spaces both count as margin, but are *not*
+// considered equivalent)
+func TestDedentPreserveMarginTabs(t *testing.T) {
+	tests := []struct {
+		input    string
+		expexted string
+	}{
+		// unchanged
+		{
+			"  hello there\n\thow are you?",
+			"  hello there\n\thow are you?",
+		},
+		// same effect even if we have 8 spaces
+		{
+			"        hello there\n\thow are you?",
+			"        hello there\n\thow are you?",
+		},
+		// dedent() only removes whitespace that can be uniformly removed!
+		{
+			"\thello there\n\thow are you?",
+			"hello there\nhow are you?",
+		},
+		{
+			"  \thello there\n  \thow are you?",
+			"hello there\nhow are you?",
+		},
+		{
+			"  \t  hello there\n  \t  how are you?",
+			"hello there\nhow are you?",
+		},
+		{
+			"  \thello there\n  \t  how are you?",
+			"hello there\n  how are you?",
+		},
+		// test margin is smaller than smallest indent
+		{
+			"  \thello there\n   \thow are you?\n \tI'm fine, thanks",
+			" \thello there\n  \thow are you?\n\tI'm fine, thanks",
 		},
 	}
 
