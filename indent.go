@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-type PreducateFunc = func(s string) bool
+// PredicateFunc is a function type for using in Indent function
+type PredicateFunc = func(s string) bool
 
 // IsNotEmpty returns true if s is not empty. false in other cases.
 func IsNotEmpty(s string) bool {
@@ -33,7 +34,7 @@ func None(_ string) bool {
 //  - https://docs.python.org/3/library/textwrap.html#textwrap.indent
 // 	- https://github.com/python/cpython/blob/3.9/Lib/textwrap.py#L465
 //  - https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L816
-func Indent(text, prefix string, pred PreducateFunc) string {
+func Indent(text, prefix string, pred PredicateFunc) string {
 	prefixed := []string{}
 	sep := "\n"
 
