@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Version shows current version of the library.
 const Version = "0.0.1"
 
 var debug bool
