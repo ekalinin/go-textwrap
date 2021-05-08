@@ -7,6 +7,7 @@ import (
 
 var debug bool
 
+// SetDebug sets debug output on/off.
 func SetDebug(d bool) {
 	debug = d
 }
