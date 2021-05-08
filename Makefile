@@ -28,4 +28,4 @@ endif
 # Setup actions
 # https://github.com/mvdan/github-actions-golang
 # https://github.com/goreleaser/goreleaser-action/blob/50de962f8481ce3586a634faaa1ef61523dcb5e4/README.md
-#
+# https://goreleaser.com/ci/actions/
