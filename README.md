@@ -9,10 +9,10 @@ Is a port of the [python's library](https://docs.python.org/3/library/textwrap.h
 
 # TOC
 
-    * [How to install](#how-to-install)
-    * [API](#api)
-        * [Detent](#detent)
-        * [Indent](#indent)
+ * [How to install](#how-to-install)
+ * [API](#api)
+     * [Detent](#detent)
+     * [Indent](#indent)
 
 
 # How to install
