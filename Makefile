@@ -1,7 +1,7 @@
 VERSION=`grep "Version" textwrap.go | grep -o -E '[0-9]\.[0-9]{1,2}\.[0-9]{1,2}'`
 
 test:
-	go test -v ./...
+	go test -v -cover ./...
 
 release: check-version check-master test
 	git tag v${VERSION} && \
