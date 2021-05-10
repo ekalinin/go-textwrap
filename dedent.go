@@ -25,9 +25,9 @@ var (
 // Entirely blank lines are normalized to a newline character.
 //
 // Sources:
-// 	- https://docs.python.org/3/library/textwrap.html#textwrap.dedent
-//  - https://github.com/python/cpython/blob/3.9/Lib/textwrap.py#L414
-// 	- https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L694
+// - https://docs.python.org/3/library/textwrap.html#textwrap.dedent
+// - https://github.com/python/cpython/blob/3.9/Lib/textwrap.py#L414
+// - https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L694
 func Dedent(text string) string {
 	// Look for the longest leading string of spaces and tabs common to all lines
 	margin := emptyMargin

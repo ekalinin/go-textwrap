@@ -23,7 +23,7 @@ func None(_ string) bool {
 	return false
 }
 
-// Indent Adds 'prefix' to the beginning of selected lines in 'text'.
+// Indent adds 'prefix' to the beginning of selected lines in 'text'.
 //
 // If 'predicate' is provided, 'prefix' will only be added to the lines
 // where 'predicate(line)' is True. If 'predicate' is not provided,
@@ -31,9 +31,9 @@ func None(_ string) bool {
 // consist solely of whitespace characters.
 //
 // Sources:
-//  - https://docs.python.org/3/library/textwrap.html#textwrap.indent
-// 	- https://github.com/python/cpython/blob/3.9/Lib/textwrap.py#L465
-//  - https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L816
+// - https://docs.python.org/3/library/textwrap.html#textwrap.indent
+// - https://github.com/python/cpython/blob/3.9/Lib/textwrap.py#L465
+// - https://github.com/python/cpython/blob/3.9/Lib/test/test_textwrap.py#L816
 func Indent(text, prefix string, pred PredicateFunc) string {
 	prefixed := []string{}
 	sep := "\n"
