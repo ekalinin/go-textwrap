@@ -12,3 +12,95 @@ Is a port of the [python's library](https://docs.python.org/3/library/textwrap.h
 ```sh
 $ go get github.com/ekalinin/go-textwrap
 ```
+
+# API
+
+## Detent
+
+The code:
+
+```go
+// ➜ cat main.go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ekalinin/go-textwrap"
+)
+
+func main() {
+	txt := `
+		select *
+		  from products
+		 where price > 100;
+	`
+	fmt.Println(">> Just text:")
+	fmt.Println(txt)
+
+	fmt.Println(">> Width Dedent:")
+	fmt.Println(textwrap.Dedent(txt))
+}
+```
+
+The result:
+
+```sh
+➜ go run main.go
+>> Just text:
+
+		select *
+		  from products
+		 where price > 100;
+
+>> Width Dedent:
+
+select *
+  from products
+ where price > 100;
+```
+
+## Indent
+
+The code:
+
+```go
+// ➜ cat main.go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ekalinin/go-textwrap"
+)
+
+func main() {
+	txt := `
+    select *
+      from products
+     where price > 100;
+	`
+	fmt.Println(">> Just text:")
+	fmt.Println(txt)
+
+	fmt.Println(">> Width Indent:")
+	fmt.Println(textwrap.Indent(txt, "++", nil))
+}
+```
+
+The result:
+
+```sh
+➜ go run main.go
+>> Just text:
+
+    select *
+      from products
+     where price > 100;
+
+>> Width Indent:
+
+++    select *
+++      from products
+++     where price > 100;
+```
