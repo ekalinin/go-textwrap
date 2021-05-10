@@ -7,6 +7,14 @@ Is a port of the [python's library](https://docs.python.org/3/library/textwrap.h
 [![Tests](https://github.com/ekalinin/go-textwrap/workflows/Tests/badge.svg)](https://github.com/ekalinin/go-textwrap/actions/workflows/tests.yml)
 [![Go Report Card](https://goreportcard.com/badge/ekalinin/go-textwrap)](https://goreportcard.com/report/github.com/ekalinin/go-textwrap)
 
+# TOC
+
+    * [How to install](#how-to-install)
+    * [API](#api)
+        * [Detent](#detent)
+        * [Indent](#indent)
+
+
 # How to install
 
 ```sh
@@ -16,6 +24,10 @@ $ go get github.com/ekalinin/go-textwrap
 # API
 
 ## Detent
+
+Documentation:
+
+- https://pkg.go.dev/github.com/ekalinin/go-textwrap#Dedent
 
 The code:
 
@@ -61,6 +73,10 @@ select *
 ```
 
 ## Indent
+
+Documentation:
+
+- https://pkg.go.dev/github.com/ekalinin/go-textwrap#Indent
 
 The code:
 
